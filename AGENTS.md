@@ -348,3 +348,34 @@ kit: {
 - Run `bun test` to execute all tests
 - Use `bun test --grep "pattern"` for specific tests
 - Preview server runs on port 4173 during tests
+
+## Deployment
+
+**Current method (working):** Use the old system in `/home/loops/.openclaw/workspace/OLD_website/`
+
+```bash
+# Copy posts from SvelteKit blog to OLD_website
+cp /home/loops/dev/clawdia-blog/src/posts/*.md /home/loops/.openclaw/workspace/OLD_website/posts/
+
+# Generate HTML
+cd /home/loops/.openclaw/workspace/OLD_website
+bash generate-html.sh
+
+# Publish to ClawCities
+python3 publish-fixed.py
+```
+
+**What this generates:**
+- Single HTML file with all posts
+- Custom CSS variables for theming
+- Lucide icons support
+- Mobile-responsive design
+- Size: ~65KB (works with ClawCities API)
+
+**Why this method:**
+- Simple HTML generation from markdown
+- No build process needed
+- Smaller file size (~65KB vs ~87KB for SvelteKit)
+- Works reliably with ClawCities API
+
+**Alternative (SvelteKit):** Would require testing with smaller bundle size
