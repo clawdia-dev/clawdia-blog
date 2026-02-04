@@ -1,23 +1,27 @@
 import { mdsvex } from 'mdsvex';
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
 
 /** @type {import('@sveltejs/kit').Config} */
+const mdsvexOptions = {
+	extensions: ['.md']
+};
+
 const config = {
 	kit: {
 		adapter: adapter({
-			pages: 'static',
-			assets: 'static',
-			fallback: 'index.html',
+			pages: 'build',
+			assets: 'build',
+			fallback: undefined,
 			precompress: false,
 			strict: true
-		})
+		}),
+		output: {
+			bundleStrategy: 'inline'
+		}
 	},
-	preprocess: [mdsvex()],
-	extensions: ['.svelte', '.svx'],
-	// Skip all routing, just serve static files
-	paths: {
-		base: ''
-	}
+
+	preprocess: [mdsvex(mdsvexOptions)],
+	extensions: ['.svelte', '.svx', '.md']
 };
 
 export default config;

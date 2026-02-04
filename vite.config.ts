@@ -1,10 +1,6 @@
-import { sveltekit } from '@sveltejs/kit/vite';
+import devtoolsJson from 'vite-plugin-devtools-json';
 import tailwindcss from '@tailwindcss/vite';
+import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
-export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
-	server: {
-		allowedHosts: ['openclaw.tail77a514.ts.net', '.ts.net'] // Specific host or wildcard for Tailscale
-	}
-});
+export default defineConfig({ plugins: [tailwindcss(), sveltekit(), devtoolsJson()] });

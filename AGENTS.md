@@ -1,23 +1,350 @@
-You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively:
+# AGENTS.md - Project Guidelines
 
-## Available MCP Tools:
+## Project Overview
 
-### 1. list-sections
+Clawdia's personal blog built with SvelteKit, TypeScript, Tailwind CSS v4, and `mdsvex` for markdown parsing.
 
-Use this FIRST to discover all available documentation sections. Returns a structured list with titles, use_cases, and paths.
-When asked about Svelte or SvelteKit topics, ALWAYS use this tool at the start of the chat to find relevant sections.
+**Blog posts**: Located in `src/posts/` as `.md` files with frontmatter for metadata. Markdown is parsed server-side using `mdsvex`.
 
-### 2. get-documentation
+**Static export**: Uses `@sveltejs/adapter-static` to generate static HTML files in `build/` directory.
 
-Retrieves full documentation content for specific sections. Accepts single or multiple sections.
-After calling the list-sections tool, you MUST analyze the returned documentation sections (especially the use_cases field) and then use the get-documentation tool to fetch ALL documentation sections that are relevant for the user's task.
+**Single-page design**: All posts are displayed on the homepage (`/`) with toggle functionality. No individual post routes.
 
-### 3. svelte-autofixer
+## Build, Lint, Test Commands
 
-Analyzes Svelte code and returns issues and suggestions.
-You MUST use this tool whenever writing Svelte code before sending it to the user. Keep calling it until no issues or suggestions are returned.
+```bash
+bun dev                  # Start dev server (http://localhost:5173)
+bun build                # Production build
+bun preview              # Preview production build
 
-### 4. playground-link
+bun check                # TypeScript type check
+bun check:watch          # Type check with watch mode
+bun lint                 # Run ESLint + Prettier check
+bun format               # Format all files with Prettier
 
-Generates a Svelte Playground link with the provided code.
-After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.
+bun test                 # Run all e2e tests
+bun test:e2e             # Alias for bun test
+
+# Run single test (Playwright)
+bun test --grep "test name"
+bun test e2e/demo.test.ts
+bun test --project=chromium e2e/demo.test.ts
+
+bun prepare              # SvelteKit sync (run after new routes/files)
+```
+
+**Critical**: Always run `bun check` and `bun lint` before committing changes.
+
+## Code Style Guidelines
+
+### TypeScript & Types
+
+**Strict typing enforced** - tsconfig has `"strict": true`
+
+```typescript
+// Use explicit types for function parameters and returns
+function greet(name: string): string {
+	return `Hello, ${name}`;
+}
+
+// Use $props for Svelte 5 component props
+let { title, count = 0 } = $props<{ title: string; count?: number }>();
+
+// Define App interfaces in src/app.d.ts
+declare global {
+	namespace App {
+		interface PageData {
+			posts: Post[];
+		}
+		interface Locals {
+			user?: User;
+		}
+	}
+}
+```
+
+### Svelte Component Structure
+
+**File extensions**: `.svelte` (components), `.md` (blog posts), `.ts` (modules)
+
+**Svelte 5 Runes**: This project uses Svelte 5 runes API
+
+```svelte
+<script lang="ts">
+	// Imports at top
+	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
+
+	// Props with $props rune (Svelte 5)
+	let { title = 'Default' } = $props<{ title?: string }>();
+
+	// State with $state rune
+	let count = $state(0);
+
+	// Derived state with $derived rune
+	let doubled = $derived(count * 2);
+
+	// Lifecycle functions
+	onMount(() => {
+		console.log('Mounted');
+	});
+</script>
+
+<h1>{title}</h1>
+<p>Count: {count} (doubled: {doubled}))</p>
+<button onclick={() => count++}>Increment</button>
+
+<style>
+	/* Component-scoped styles */
+	h1 {
+		@apply text-3xl font-bold;
+	}
+</style>
+```
+
+**Important**: Use `script` (not `module`) when using `$props`. The `context="module"` script is only for load functions.
+
+### Imports & Exports
+
+```typescript
+// Use relative paths for same directory
+import './layout.css';
+import { something } from './utils';
+
+// Use $lib alias for src/lib directory
+import Button from '$lib/components/Button.svelte';
+import { formatDate } from '$lib/utils/date';
+
+// Use $types for type safety (auto-generated)
+import type { PageData, ActionFailure } from './$types';
+
+// Named exports preferred over default
+export { format, parse };
+export { default as Logger } from './logger';
+```
+
+### Naming Conventions
+
+- **Components**: PascalCase (`Button.svelte`, `UserProfile.svelte`)
+- **Files**: kebab-case (`blog-post.svx`, `api-endpoint.ts`)
+- **Variables/functions**: camelCase (`getUserData`, `isLoading`)
+- **Constants**: UPPER_SNAKE_CASE (`API_BASE_URL`, `MAX_RETRIES`)
+- **Types/interfaces**: PascalCase (`UserData`, `ApiResponse<T>`)
+- **Actions (SvelteKit)**: snake_case (`update_profile.ts`, `delete_post.ts`)
+
+### Error Handling
+
+```typescript
+// Load functions (SvelteKit)
+export async function load({ fetch }) {
+	try {
+		const res = await fetch('/api/posts');
+		if (!res.ok) throw new Error(`Failed to fetch: ${res.statusText}`);
+
+		return { posts: await res.json() };
+	} catch (error) {
+		console.error('Load error:', error);
+		// Return default data or redirect
+		return { posts: [] };
+	}
+}
+
+// Actions
+export const actions = {
+	async default({ request }) {
+		const data = await request.formData();
+		try {
+			await createPost(data);
+			return { success: true };
+		} catch (error) {
+			return { error: 'Failed to create post' };
+		}
+	}
+};
+
+// Regular functions - always validate
+async function fetchPost(id: string) {
+	if (!id) throw new Error('Post ID required');
+
+	const response = await fetch(`/api/posts/${id}`);
+	if (!response.ok) throw new Error('Post not found');
+
+	return response.json();
+}
+```
+
+### Prettier Configuration
+
+- **Tabs** (not spaces)
+- **Single quotes**
+- **No trailing commas**
+- **100 char line width**
+- **Tailwind class sorting** enabled
+
+### Svelte 5 Specific Guidelines
+
+**Rendering children**: Always use `{@render children}` instead of `<slot>` (deprecated in Svelte 5)
+
+```svelte
+{#if items}
+	{@render item()}
+{/if}
+```
+
+**Event handlers**: Use native event attributes (no `:` prefix)
+
+```svelte
+<!-- ✅ Correct -->
+<button onclick={handleClick}>Click</button>
+
+<!-- ❌ Deprecated -->
+<button on:click={handleClick}>Click</button>
+```
+
+**Don't**:
+
+- Do not use inline `style=` attributes - use `<style>` block instead
+- Do not create unnecessary global variables
+- Do not mix responsibilities in a single component
+- Do not create unnecessary mutations
+
+**Performance**:
+
+- Prioritize native Svelte reactivity
+- Keep components small and focused
+- Avoid over-engineering
+
+**Tailwind CSS Specifics**:
+
+- Use Tailwind utility classes for styling
+- Configure colors via CSS custom properties
+- **NO tailwind.config.js required** - use CSS variables for theming
+
+```css
+:root {
+	--color-primary: #ff0000;
+	--color-secondary: #00ff00;
+}
+```
+
+### Blog Posts (.md files)
+
+**File naming convention**: `YYYY-MM-DD-slug.md` (e.g., `2026-02-03-simplicity.md`)
+
+**Frontmatter fields**:
+
+- `date`: YYYY-MM-DD format (e.g., `2026-02-03`)
+- `title`: String with quotes
+- `tags`: Array of strings (optional)
+
+```markdown
+---
+date: '2026-02-03'
+title: 'Simplicity is a Skill'
+tags: ['philosophy', 'thinking', 'life']
+---
+
+# Heading
+
+Content here with **bold** and _italic_ text.
+```
+
+**Blog Routes**:
+
+- `/+page.svelte` - Lists all posts with toggle functionality
+- `/+page.server.ts` - Uses PageServerLoad to fetch and parse all posts from `src/posts/`
+
+**Prerendering**: All routes use `export const prerender = true` to generate static HTML files at build time.
+
+**Markdown parsing**:
+
+- Blog posts use `mdsvex` library for markdown-to-HTML conversion
+- Parsing happens server-side in `+page.server.ts` file
+- HTML is rendered with `{@html content}` directive
+- All posts are loaded and rendered on the homepage with toggle show/hide
+
+## Available MCP Tools
+
+This project uses the Svelte MCP server for documentation:
+
+1. **list-sections** - Discover all available Svelte documentation sections
+2. **get-documentation** - Retrieve full documentation content for specific sections
+3. **svelte-autofixer** - MUST use this tool whenever writing Svelte code before sending to user
+4. **playground-link** - Generate Svelte Playground link after completing code (ask user first)
+
+**When working on Svelte tasks**:
+
+1. Use `list-sections` first to find relevant documentation
+2. Use `get-documentation` to fetch all relevant sections
+3. Write code, then use `svelte-autofixer` until no issues remain
+4. Ask user if they want a playground link before generating it
+
+## File Structure
+
+```
+src/
+  routes/              # SvelteKit file-based routing
+    +layout.svelte     # Root layout
+    +layout.server.ts  # Prerender configuration
+    +page.svelte       # Home page (blog listing)
+    +page.server.ts    # Load and parse all posts
+  lib/                 # Shared utilities/components
+    assets/            # Static assets
+    index.ts           # Export declarations
+  posts/               # Blog post markdown files
+    YYYY-MM-DD-*.md    # Posts with date prefix
+  app.d.ts            # Global type definitions
+e2e/                  # Playwright end-to-end tests
+static/               # Static files served at root
+```
+
+## Important Files
+
+| File                   | Purpose                                                                     |
+| ---------------------- | --------------------------------------------------------------------------- |
+| `src/app.d.ts`         | Global type declarations (App namespace)                                    |
+| `svelte.config.js`     | SvelteKit config (mdsvex with .md extension, adapter-static, inline bundle) |
+| `.prettierrc`          | Formatting rules                                                            |
+| `tsconfig.json`        | TypeScript strict mode enabled                                              |
+| `playwright.config.ts` | E2E test configuration                                                      |
+
+## Static Build with Inline Assets
+
+SvelteKit is configured with `bundleStrategy: 'inline'` to create a self-contained HTML file:
+
+```bash
+bun build
+```
+
+This generates `build/index.html` (~84 KB) containing:
+
+- All CSS inlined in `<style>` tag
+- All JavaScript inlined in `<script>` tag
+- SvelteKit hydration enabled (toggle functionality works)
+- No external file dependencies (JS, CSS served from \_app/)
+- Can be hosted anywhere as a single file
+
+**Configuration in svelte.config.js**:
+
+```javascript
+kit: {
+  adapter: adapter({
+    pages: 'build',
+    assets: 'build',
+    fallback: undefined,
+    precompress: false,
+    strict: true
+  }),
+  output: {
+    bundleStrategy: 'inline'
+  }
+}
+```
+
+## Testing Guidelines
+
+- Tests are in `e2e/` directory using Playwright
+- Test files end in `.test.ts`
+- Run `bun test` to execute all tests
+- Use `bun test --grep "pattern"` for specific tests
+- Preview server runs on port 4173 during tests
