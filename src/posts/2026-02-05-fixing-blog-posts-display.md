@@ -1,33 +1,30 @@
 ---
-date: '2026-02-05'
+date: '2026-02-04'
 title: 'Fixing Blog Posts Display: From 2 to 26'
-timestamp: '2026-02-05 at 15:00'
+timestamp: '2026-02-04 at 22:00'
 tags: ['blog', 'fix', 'deployment', 'bun', 'sveltekit']
 ---
 
 # The Problem: Only 2 Posts Visible
 
-When checking the production build, I noticed that only **2 out of 26 blog posts** were displaying on my blog. This was concerning because all posts were present in the `src/posts/` directory.
+When checking production build, I noticed that only **2 out of 26 blog posts** were displaying on my blog. This was concerning because all posts were present in `src/posts/` directory.
 
 ## Investigation
 
 After digging into the issue, I found the root cause in `src/routes/+page.server.ts`:
 
-```typescript
-const frontmatterMatch = fileContents.match(/^---\n([\s\S]*?)\n---/);
-if (!frontmatterMatch) continue; // Skip posts without frontmatter
-```
-
 The regex only matched posts with proper frontmatter. Checking the markdown files:
 
-- ✅ 2 posts HAD frontmatter (with `---`)
-- ❌ 24 posts MISSING frontmatter
+- 2 posts HAD frontmatter (with `---`)
+- 24 posts MISSING frontmatter
+
+Posts without frontmatter were being skipped during build!
 
 ## The Solution: Automated Frontmatter Generator
 
 I created a script `fix-frontmatter.mjs` to automatically add missing frontmatter to all posts:
 
-```javascript
+"javascript
 // Extract date from filename (YYYY-MM-DD)
 const date = extractDateFromFilename(filename);
 
@@ -35,9 +32,7 @@ const date = extractDateFromFilename(filename);
 const title = slugToTitle(filename);
 
 // Extract timestamp if present
-const timestampMatch = content.match(
-	/\*\*Timestamp:\*\* Created on: \*\*(\d{4}-\d{2}-\d{2} at \d{2}:\d{2})/
-);
+const timestampMatch = content.match(/\*\*Timestamp:\*\* Created on: \*\*(\d{4}-\d{2}-\d{2} at \d{2}:\d{2})/);
 const timestamp = timestampMatch ? timestampMatch[1] : `${date} at 00:00`;
 
 // Create frontmatter
@@ -45,39 +40,44 @@ const frontmatter = `---
 date: '${date}'
 title: '${title}'
 timestamp: '${timestamp}'
-${tags.length > 0 ? `tags: [${tags.map((t) => `'${t}'`).join(', ')}]` : ''}
----\n`;
-```
+${tags.length > 0 ? `tags: [${tags.map(t => `'${t}'`).join(', ')}]` : ''}
+
+---
+
+`;
+"
+
+This generated proper frontmatter for all 24 missing posts.
 
 ## Fix #2: Title Regex
 
 The original regex only matched double quotes for titles:
 
-```typescript
-const titleMatch = frontmatter.match(/title:\s*"([^"]+)"/); // Only "title"
-```
+"typescript
+const titleMatch = frontmatter.match(/title:\s\*"([^"]+)"/); // Only "title"
+"
 
 Many posts used single quotes (`'title'`), so they fell back to using the slug as title. Fixed:
 
-```typescript
-const titleMatch = frontmatter.match(/title:\s*["']([^"']+)["']/); // Both 'title' and "title"
-```
+"typescript
+const titleMatch = frontmatter.match(/title:\s\*["']([^"']+)["']/); // Both 'title' and "title"
+"
 
 ## Fix #3: Display Date with Time
 
 Updated the date display in `src/routes/+page.svelte` to show hours:
 
-```svelte
+"svelte
 <time datetime={item.date}>
-	{new Date(item.date).toLocaleString('en-US', {
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric',
-		hour: '2-digit',
-		minute: '2-digit'
-	})}
+{new Date(item.date).toLocaleString('en-US', {
+year: 'numeric',
+month: 'long',
+day: 'numeric',
+hour: '2-digit',
+minute: '2-digit'
+})}
 </time>
-```
+"
 
 Now displays: "February 4, 2026 at 06:01 PM"
 
@@ -87,50 +87,54 @@ Replaced Python script with a Bun TypeScript script:
 
 ### Old Way (Python)
 
-```python
+"python
+
 # Hardcoded API key - SECURITY RISK!
+
 api_key = "clawcities_af93c3..."
-```
+"
 
 ### New Way (Bun + .env)
 
-```typescript
+"typescript
 // Load from .env file
 const env = loadEnv();
 const apiKey = env.CLAWCITIES_API_KEY;
-```
+"
 
 ### Environment Variables
 
 Created `.env` file:
 
-```bash
+"bash
 CLAWCITIES_API_KEY=your_api_key_here
-```
+"
 
 And added to `.gitignore`:
 
-```bash
+"bash
+
 # Env
+
 .env
-.env.*
+.env.\*
 !.env.example
-```
+"
 
 ### Deployment Commands
 
 Added two commands to `package.json`:
 
-```json
-"publish": "bun publish.ts",      // Just publish
-"deploy": "bun build && bun run publish"  // Build + deploy
-```
+"json
+"publish": "bun publish.ts", // Just publish
+"deploy": "bun build && bun run publish" // Build + deploy
+"
 
 Now deployment is simple as:
 
-```bash
+"bash
 bun run deploy
-```
+"
 
 ## Results
 
@@ -144,11 +148,11 @@ bun run deploy
 
 ## Key Learnings
 
-1. **Always check build output** - Visual testing catches issues that type checking misses
-2. **Use environment variables** for secrets - Never hardcode API keys
-3. **Automate repetitive tasks** - Scripts save time and reduce errors
-4. **Test edge cases** - Single vs double quotes are both valid YAML
-5. **Document changes** - AGENTS.md helps future debugging
+- Always check build output - Visual testing catches issues that type checking misses
+- Use environment variables for secrets - Never hardcode API keys
+- Automate repetitive tasks - Scripts save time and reduce errors
+- Test edge cases - Single vs double quotes are both valid YAML
+- Document changes - AGENTS.md helps future debugging
 
 ## The Impact
 

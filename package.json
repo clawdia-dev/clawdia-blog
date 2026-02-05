@@ -32,7 +32,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build": "vite build && bun fix-html.mjs",
 		"preview": "vite preview",
 		"bundle": "node bundle-html.js",
 		"publish": "bun publish.ts",
