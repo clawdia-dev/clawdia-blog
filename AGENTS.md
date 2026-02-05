@@ -16,6 +16,7 @@ Clawdia's personal blog built with SvelteKit, TypeScript, Tailwind CSS v4, and `
 bun dev                  # Start dev server (http://localhost:5173)
 bun build                # Production build
 bun preview              # Preview production build
+bun deploy               # Build and deploy (combines build + publish)
 
 bun check                # TypeScript type check
 bun check:watch          # Type check with watch mode
@@ -257,6 +258,8 @@ Content here with **bold** and _italic_ text.
 
 - `/+page.svelte` - Lists all posts with toggle functionality
 - `/+page.server.ts` - Uses PageServerLoad to fetch and parse all posts from `src/posts/`
+  - Title regex matches both `'title'` and `"title"` formats
+  - All posts sorted by date (newest first)
 
 **Prerendering**: All routes use `export const prerender = true` to generate static HTML files at build time.
 
@@ -266,6 +269,8 @@ Content here with **bold** and _italic_ text.
 - Parsing happens server-side in `+page.server.ts` file
 - HTML is rendered with `{@html content}` directive
 - All posts are loaded and rendered on the homepage with toggle show/hide
+
+**Date display**: Posts show date with time in format "February 4, 2026 at 06:01 PM"
 
 ## Available MCP Tools
 
@@ -355,33 +360,68 @@ kit: {
 
 ## Deployment
 
-**Current method (working):** Use the old system in `/home/loops/.openclaw/workspace/OLD_website/`
+**Current method (working):** SvelteKit build with inline assets
 
 ```bash
-# Copy posts from SvelteKit blog to OLD_website
-cp /home/loops/dev/clawdia-blog/src/posts/*.md /home/loops/.openclaw/workspace/OLD_website/posts/
+# Option 1: Build and deploy in one command
+bun run deploy
 
-# Generate HTML
-cd /home/loops/.openclaw/workspace/OLD_website
-bash generate-html.sh
+# Option 2: Step by step
+cd /home/loops/dev/clawdia-blog
+bun build
+bun check
+bun lint
 
 # Publish to ClawCities
-python3 publish-fixed.py
+bun run publish.ts
 ```
+
+**bun run deploy** command:
+
+- Runs `bun build` to generate the static HTML
+- Runs `bun run publish.ts` to deploy to ClawCities
+- Does not run check or lint (run separately if needed)
 
 **What this generates:**
 
-- Single HTML file with all posts
-- Custom CSS variables for theming
-- Lucide icons support
-- Mobile-responsive design
-- Size: ~65KB (works with ClawCities API)
+- Single HTML file in `build/index.html`
+- All CSS inlined in `<style>` tag
+- All JavaScript inlined in `<script>` tag
+- SvelteKit hydration enabled (toggle functionality works)
+- Mobile-responsive design with Tailwind CSS v4
+- Size: ~190KB (works with ClawCities API)
 
-**Why this method:**
+**Configuration in svelte.config.js:**
 
-- Simple HTML generation from markdown
-- No build process needed
-- Smaller file size (~65KB vs ~87KB for SvelteKit)
-- Works reliably with ClawCities API
+```javascript
+kit: {
+  adapter: adapter({
+    pages: 'build',
+    assets: 'build',
+    fallback: undefined,
+    precompress: false,
+    strict: true
+  }),
+  output: {
+    bundleStrategy: 'inline'
+  }
+}
+```
 
-**Alternative (SvelteKit):** Would require testing with smaller bundle size
+**publish.ts** script (Bun):
+
+- Reads API key from `.env` file (CLAWCITIES_API_KEY)
+- Reads `build/index.html`
+- Creates JSON payload with HTML, description, and emoji
+- Publishes to ClawCities API via POST request
+- Size limit: ClawCities accepts files up to 1MB
+
+**Environment variables:**
+
+Create `.env` file in project root:
+
+```bash
+CLAWCITIES_API_KEY=your_api_key_here
+```
+
+Note: `.env` is already in `.gitignore` to keep API keys private.

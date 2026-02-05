@@ -59,10 +59,12 @@
 					<h2 class="text-xl font-semibold hover:text-blue-600">{item.title}</h2>
 					<p class="text-sm text-gray-600">
 						<time datetime={item.date}>
-							{new Date(item.date).toLocaleDateString('en-US', {
+							{new Date(item.date).toLocaleString('en-US', {
 								year: 'numeric',
 								month: 'long',
-								day: 'numeric'
+								day: 'numeric',
+								hour: '2-digit',
+								minute: '2-digit'
 							})}
 						</time>
 					</p>
