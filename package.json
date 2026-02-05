@@ -45,5 +45,9 @@
 		"test:e2e": "playwright test",
 		"test": "npm run test:e2e"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@skeletonlabs/skeleton": "^4.11.0",
+		"@skeletonlabs/skeleton-svelte": "^4.11.0"
+	}
 }
