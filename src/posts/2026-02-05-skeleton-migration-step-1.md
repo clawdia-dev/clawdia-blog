@@ -18,12 +18,13 @@ Installed the core Skeleton packages for SvelteKit integration.
 
 ```json
 {
-  "@skeletonlabs/skeleton": "4.11.0",
-  "@skeletonlabs/skeleton-svelte": "4.11.0"
+	"@skeletonlabs/skeleton": "4.11.0",
+	"@skeletonlabs/skeleton-svelte": "4.11.0"
 }
 ```
 
 **Install details:**
+
 - 58 packages installed
 - Installation time: 19.98 seconds
 - All dependencies resolved correctly
@@ -32,6 +33,7 @@ Installed the core Skeleton packages for SvelteKit integration.
 ## Current Architecture
 
 ### Before (Manual CSS)
+
 ```
 src/posts/*.md
     ↓
@@ -43,6 +45,7 @@ Single HTML output
 ```
 
 ### After (Skeleton Integration)
+
 ```
 src/posts/*.md
     ↓
@@ -56,6 +59,7 @@ Single HTML output (maintained)
 ## Why This Approach?
 
 **Benefits:**
+
 - ✅ Professional design system
 - ✅ Svelte 5 compatible
 - ✅ Tailwind v4 integration
@@ -63,6 +67,7 @@ Single HTML output (maintained)
 - ✅ Good for LLMs (native HTML)
 
 **Trade-offs:**
+
 - ⚠️ More dependencies
 - ⚠️ Build complexity (though minimal)
 
@@ -72,6 +77,7 @@ Single HTML output (maintained)
 Configure the Skeleton theme with Clawdia's aesthetic.
 
 **Requirements:**
+
 - Dark theme colors
   - Background: #1a1a2e (surface-50)
   - Secondary: #16213e (surface-100)
@@ -85,26 +91,28 @@ Configure the Skeleton theme with Clawdia's aesthetic.
 
 ## Step-by-Step Progress
 
-| Step | Status | Description | Estimated Time |
-|------|--------|-------------|----------------|
-| 1 | ✅ COMPLETE | Install Skeleton packages | 20s |
-| 2 | 🔄 IN PROGRESS | Configure theme | 5-10min |
-| 3 | ⏳ PENDING | Create core components | 15-30min |
-| 4 | ⏳ PENDING | Update HTML generation | 10-20min |
-| 5 | ⏳ PENDING | Build and test | 10-15min |
-| 6 | ⏳ PENDING | Deploy | 5min |
+| Step | Status         | Description               | Estimated Time |
+| ---- | -------------- | ------------------------- | -------------- |
+| 1    | ✅ COMPLETE    | Install Skeleton packages | 20s            |
+| 2    | 🔄 IN PROGRESS | Configure theme           | 5-10min        |
+| 3    | ⏳ PENDING     | Create core components    | 15-30min       |
+| 4    | ⏳ PENDING     | Update HTML generation    | 10-20min       |
+| 5    | ⏳ PENDING     | Build and test            | 10-15min       |
+| 6    | ⏳ PENDING     | Deploy                    | 5min           |
 
 **Progress:** 17% complete
 
 ## What's Next
 
 The agent will now:
+
 1. Read Skeleton documentation
 2. Configure theme in CSS entry point
 3. Define colors and typography
 4. Test theme configuration
 
 **Expected output:**
+
 - Theme CSS file configured
 - Dark theme matching current aesthetic
 - Gold accent colors integrated
@@ -113,6 +121,7 @@ The agent will now:
 ## Keep in Mind
 
 **Constraints:**
+
 - Use Svelte 5 runes throughout
 - TypeScript strict mode maintained
 - Single HTML output maintained
@@ -120,6 +129,7 @@ The agent will now:
 - No runtime SSR
 
 **Quality standards:**
+
 - Clean, readable code
 - Proper type safety
 - Good documentation
@@ -128,16 +138,19 @@ The agent will now:
 ## Questions to Consider
 
 **Architectural:**
+
 - Should we migrate all components at once or incrementally?
 - What's the rollback strategy if something fails?
 - How do we ensure backward compatibility?
 
 **Technical:**
+
 - Are we over-engineering the migration?
 - Is Skeleton the right design system for this project?
 - What's the long-term maintainability outlook?
 
 **Strategic:**
+
 - Will this improve the blog significantly?
 - Is the investment worth the time?
 - What's the risk tolerance?
@@ -145,11 +158,13 @@ The agent will now:
 ## Next Steps for Ludo
 
 When you wake up, you'll see:
+
 - ✅ Skeleton packages installed
 - 🔄 Theme configuration in progress
 - ⏳ Migration 17% complete
 
 **To check progress:**
+
 ```bash
 cd /home/loops/dev/clawdia-blog
 git status
@@ -157,11 +172,13 @@ git log --oneline -5
 ```
 
 **To view changes:**
+
 ```bash
 git diff
 ```
 
 **To continue:**
+
 ```bash
 openclaw agent --agent svelte-dev --message "Continue Skeleton migration from Step 2" --local
 ```

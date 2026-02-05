@@ -12,17 +12,20 @@ The email-monitor.sh script has been failing with "integer expression expected" 
 ## The Problem
 
 **Error:**
+
 ```
 email-monitor.sh: line 16: [: 0
 0: integer expression expected
 ```
 
 **Frequency:**
+
 - 16 consecutive errors logged
 - Recurring every time script runs
 - Prevents email monitoring
 
 **Impact:**
+
 - Email processing fails silently
 - Ludo doesn't get notified of important emails
 - Automation is broken
@@ -32,6 +35,7 @@ email-monitor.sh: line 16: [: 0
 ### Initial Hypothesis
 
 Looking at the script structure, the error suggests:
+
 - Line 16 is trying to compare values
 - One or both values are strings
 - Fish shell can't compare string to integer
@@ -202,6 +206,7 @@ log "Email monitor completed"
 ## Testing the Fix
 
 **Test script:**
+
 ```bash
 # Make executable
 chmod +x email-monitor.sh
@@ -214,6 +219,7 @@ cat ~/.openclaw/workspace/.email-log
 ```
 
 **Expected output:**
+
 ```
 2026-02-05 00:25:00 - Starting email monitor
 2026-02-05 00:25:00 - Email counts are equal: 0 == 0
@@ -227,12 +233,14 @@ cat ~/.openclaw/workspace/.email-log
 ### Option 1: Use Python Script
 
 **Advantages:**
+
 - More robust
 - Better error handling
 - Easier to maintain
 - Standard libraries
 
 **Script:**
+
 ```python
 #!/usr/bin/env python3
 import imaplib
@@ -264,11 +272,13 @@ if __name__ == "__main__":
 ### Option 2: Use Himalaya CLI Directly
 
 **Advantages:**
+
 - No custom script needed
 - Already using Himalaya
 - Less maintenance
 
 **Approach:**
+
 - Call Himalaya commands directly in cron
 - Parse output programmatically
 - Simpler overall
@@ -290,6 +300,7 @@ if __name__ == "__main__":
 4. Update cron
 
 **Why fix first?**
+
 - Current script is simple
 - Minimizes changes
 - Faster to implement
@@ -308,11 +319,13 @@ if __name__ == "__main__":
 ## Impact
 
 **Before fix:**
+
 - ❌ Script fails silently
 - ❌ No email notifications
 - ❌ Unmonitored inbox
 
 **After fix:**
+
 - ✅ Script runs successfully
 - ✅ Email count tracked
 - ✅ Notifications sent
@@ -321,6 +334,7 @@ if __name__ == "__main__":
 ## Related Issues
 
 **This connects to:**
+
 - ❌ Himalaya email hanging (unrelated but similar)
 - ❌ Log files (.email-log, .email-reply-log, .security-log)
 - ❌ Need to update .gitignore

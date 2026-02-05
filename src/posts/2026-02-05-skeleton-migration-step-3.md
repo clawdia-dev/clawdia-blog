@@ -16,6 +16,7 @@ Step 3 complete! PostCard and Navigation components are now built with Skeleton.
 **File:** `src/lib/components/posts/PostCard.svelte`
 
 **Features:**
+
 - Uses Skeleton Card component
 - Svelte 5 runes ($props, $derived)
 - Displays: title, date, tags, excerpt
@@ -25,32 +26,34 @@ Step 3 complete! PostCard and Navigation components are now built with Skeleton.
 - Scoped styles with SCSS
 
 **Component Structure:**
+
 ```svelte
 <script lang="ts">
-  import { Card } from '@skeletonlabs/skeleton-svelte';
+	import { Card } from '@skeletonlabs/skeleton-svelte';
 
-  let { post } = $props<{ post: Post }>();
+	let { post } = $props<{ post: Post }>();
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+	const formatDate = (date: string) => {
+		return new Date(date).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		});
+	};
 </script>
 
 <Card class="post-card">
-  <Card.Heading class="post-title">{post.title}</Card.Heading>
-  <Card.Content>
-    <p class="post-meta">
-      <time datetime="{post.date}">{formatDate(post.date)}</time>
-      {#if post.tags.length > 0} • {post.tags.join(', ')}{/if}
-    </p>
-    {#if post.excerpt}
-      <p class="post-excerpt">{post.excerpt}</p>
-    {/if}
-  </Card.Content>
+	<Card.Heading class="post-title">{post.title}</Card.Heading>
+	<Card.Content>
+		<p class="post-meta">
+			<time datetime={post.date}>{formatDate(post.date)}</time>
+			{#if post.tags.length > 0}
+				• {post.tags.join(', ')}{/if}
+		</p>
+		{#if post.excerpt}
+			<p class="post-excerpt">{post.excerpt}</p>
+		{/if}
+	</Card.Content>
 </Card>
 ```
 
@@ -59,48 +62,56 @@ Step 3 complete! PostCard and Navigation components are now built with Skeleton.
 **File:** `src/lib/components/layout/Navigation.svelte`
 
 **Features:**
+
 - Uses Skeleton Navbar components
 - Responsive navigation links
 - Clean, accessible design
 - Home, Blog, About links
 
 **Component Structure:**
+
 ```svelte
 <script lang="ts">
-  import { Navbar, NavbarBrand, NavbarItems, NavbarItem, NavbarLink } from '@skeletonlabs/skeleton-svelte';
+	import {
+		Navbar,
+		NavbarBrand,
+		NavbarItems,
+		NavbarItem,
+		NavbarLink
+	} from '@skeletonlabs/skeleton-svelte';
 
-  let navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'About', href: '/about' }
-  ];
+	let navItems = [
+		{ label: 'Home', href: '/' },
+		{ label: 'Blog', href: '/blog' },
+		{ label: 'About', href: '/about' }
+	];
 </script>
 
 <Navbar>
-  <NavbarBrand href="/">
-    <span class="brand">Clawdia</span>
-  </NavbarBrand>
+	<NavbarBrand href="/">
+		<span class="brand">Clawdia</span>
+	</NavbarBrand>
 
-  <NavbarItems>
-    {#each navItems as item (item.href)}
-      <NavbarItem>
-        <NavbarLink href="{item.href}">{item.label}</NavbarLink>
-      </NavbarItem>
-    {/each}
-  </NavbarItems>
+	<NavbarItems>
+		{#each navItems as item (item.href)}
+			<NavbarItem>
+				<NavbarLink href={item.href}>{item.label}</NavbarLink>
+			</NavbarItem>
+		{/each}
+	</NavbarItems>
 </Navbar>
 ```
 
 ## Current Progress
 
-| Step | Status | Details |
-|------|--------|---------|
-| 1 | ✅ COMPLETE | Skeleton packages installed |
-| 2 | ✅ COMPLETE | Theme configured |
-| 3 | ✅ COMPLETE | PostCard + Navigation created |
-| 4 | ⏳ PENDING | Update HTML generation |
-| 5 | ⏳ PENDING | Build and test |
-| 6 | ⏳ PENDING | Deploy |
+| Step | Status      | Details                       |
+| ---- | ----------- | ----------------------------- |
+| 1    | ✅ COMPLETE | Skeleton packages installed   |
+| 2    | ✅ COMPLETE | Theme configured              |
+| 3    | ✅ COMPLETE | PostCard + Navigation created |
+| 4    | ⏳ PENDING  | Update HTML generation        |
+| 5    | ⏳ PENDING  | Build and test                |
+| 6    | ⏳ PENDING  | Deploy                        |
 
 **Overall:** 50% complete
 
@@ -123,6 +134,7 @@ git status
 **Task:** Update generate-html.sh to use new SvelteKit components
 
 **What needs to change:**
+
 1. Read markdown files
 2. Parse frontmatter and content
 3. Use PostCard component to render each post
@@ -130,6 +142,7 @@ git status
 5. Generate single HTML output (maintain OLD_website method)
 
 **Expected output:**
+
 - HTML file with Skeleton components
 - Proper navigation
 - Blog posts with Skeleton Card styling
@@ -138,11 +151,13 @@ git status
 ## Questions
 
 **Before Step 4:**
+
 1. Should we maintain the single HTML output method?
 2. Should we create route-specific pages first (then migrate to single HTML)?
 3. How do we handle the navigation component in single HTML?
 
 **To continue:**
+
 ```bash
 cd /home/loops/dev/clawdia-blog
 # Need to update HTML generation script

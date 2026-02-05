@@ -13,14 +13,14 @@ Ludo asks: How's the migration going? Here's the current status.
 
 **Current Progress:** Step 1 COMPLETE, Step 2 IN PROGRESS
 
-| Step | Status | Details |
-|------|--------|---------|
-| 1 | ✅ COMPLETE | Skeleton packages installed (4.11.0) |
-| 2 | 🔄 IN PROGRESS | Theme configuration |
-| 3 | ⏳ PENDING | Create components |
-| 4 | ⏳ PENDING | Update HTML generation |
-| 5 | ⏳ PENDING | Build and test |
-| 6 | ⏳ PENDING | Deploy |
+| Step | Status         | Details                              |
+| ---- | -------------- | ------------------------------------ |
+| 1    | ✅ COMPLETE    | Skeleton packages installed (4.11.0) |
+| 2    | 🔄 IN PROGRESS | Theme configuration                  |
+| 3    | ⏳ PENDING     | Create components                    |
+| 4    | ⏳ PENDING     | Update HTML generation               |
+| 5    | ⏳ PENDING     | Build and test                       |
+| 6    | ⏳ PENDING     | Deploy                               |
 
 **Overall:** 17% complete
 
@@ -29,14 +29,16 @@ Ludo asks: How's the migration going? Here's the current status.
 ### Step 1: Install Skeleton Packages ✅
 
 **Packages installed:**
+
 ```json
 {
-  "@skeletonlabs/skeleton": "4.11.0",
-  "@skeletonlabs/skeleton-svelte": "4.11.0"
+	"@skeletonlabs/skeleton": "4.11.0",
+	"@skeletonlabs/skeleton-svelte": "4.11.0"
 }
 ```
 
 **Details:**
+
 - 58 packages installed
 - Installation time: 20 seconds
 - No version conflicts
@@ -47,6 +49,7 @@ Ludo asks: How's the migration going? Here's the current status.
 **Task:** Configure theme in app.css
 
 **Requirements:**
+
 - Dark theme with Clawdia's colors:
   - Background: #1a1a2e (surface-50)
   - Secondary: #16213e (surface-100)
@@ -67,6 +70,7 @@ Ludo asks: How's the migration going? Here's the current status.
 **Expected completion:** ~5-10 minutes
 
 **Next steps after Step 2:**
+
 - Step 3: Create PostCard component
 - Step 4: Create Navigation component
 - Step 5: Update HTML generation
@@ -88,14 +92,14 @@ openclaw agent --agent svelte-dev --message "What's the current progress?" --loc
 
 ## Timeline Estimate
 
-| Step | Est. Time | Status |
-|------|-----------|--------|
-| 1 | 20s | ✅ Done |
-| 2 | 5-10min | 🔄 In progress |
-| 3 | 15-30min | ⏳ Next |
-| 4 | 10-20min | ⏳ Next |
-| 5 | 10-15min | ⏳ Next |
-| 6 | 5min | ⏳ Next |
+| Step | Est. Time | Status         |
+| ---- | --------- | -------------- |
+| 1    | 20s       | ✅ Done        |
+| 2    | 5-10min   | 🔄 In progress |
+| 3    | 15-30min  | ⏳ Next        |
+| 4    | 10-20min  | ⏳ Next        |
+| 5    | 10-15min  | ⏳ Next        |
+| 6    | 5min      | ⏳ Next        |
 
 **Estimated completion:** 55-90 minutes total
 
@@ -105,17 +109,20 @@ openclaw agent --agent svelte-dev --message "What's the current progress?" --loc
 ## Questions
 
 **When you wake up, check:**
+
 1. Is Step 2 complete? (theme configured)
 2. Are components created? (PostCard, Navigation)
 3. Is HTML generation updated?
 4. Are tests passing?
 
 **If in progress:**
+
 - Continue monitoring agent output
 - Check git status for changes
 - Review theme configuration
 
 **If complete:**
+
 - Test build locally
 - Deploy to ClawCities
 - Verify site looks good
@@ -123,6 +130,7 @@ openclaw agent --agent svelte-dev --message "What's the current progress?" --loc
 ## What You'll See
 
 **Git changes:**
+
 ```bash
 git status
 # Should show:
@@ -134,6 +142,7 @@ git status
 ```
 
 **Site updates:**
+
 - Dark theme with gold accent
 - Skeleton components (Card, etc.)
 - Single HTML output maintained

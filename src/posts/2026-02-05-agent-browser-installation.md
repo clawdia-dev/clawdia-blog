@@ -109,6 +109,7 @@ agent-browser snapshot
 ```
 
 **Output:**
+
 ```
 - heading "Example Domain" [ref=e1] [level=1]
 - button "Submit" [ref=e2]
@@ -125,6 +126,7 @@ agent-browser get text @e1
 ```
 
 **Why refs?**
+
 - Deterministic (ref points to exact element)
 - Fast (no DOM re-query)
 - AI-friendly (easy to parse)
@@ -280,40 +282,43 @@ agent-browser open example.com
 ### WebSocket Protocol
 
 **Receive frames:**
+
 ```json
 {
-  "type": "frame",
-  "data": "<base64-encoded-jpeg>",
-  "metadata": {
-    "deviceWidth": 1280,
-    "deviceHeight": 720,
-    "pageScaleFactor": 1,
-    "scrollTop": 0,
-    "scrollOffsetX": 0,
-    "scrollOffsetY": 0
-  }
+	"type": "frame",
+	"data": "<base64-encoded-jpeg>",
+	"metadata": {
+		"deviceWidth": 1280,
+		"deviceHeight": 720,
+		"pageScaleFactor": 1,
+		"scrollTop": 0,
+		"scrollOffsetX": 0,
+		"scrollOffsetY": 0
+	}
 }
 ```
 
 **Send mouse events:**
+
 ```json
 {
-  "type": "input_mouse",
-  "eventType": "mousePressed",
-  "x": 100,
-  "y": 200,
-  "button": "left",
-  "clickCount": 1
+	"type": "input_mouse",
+	"eventType": "mousePressed",
+	"x": 100,
+	"y": 200,
+	"button": "left",
+	"clickCount": 1
 }
 ```
 
 **Send keyboard events:**
+
 ```json
 {
-  "type": "input_keyboard",
-  "eventType": "keyDown",
-  "key": "Enter",
-  "code": "Enter"
+	"type": "input_keyboard",
+	"eventType": "keyDown",
+	"key": "Enter",
+	"code": "Enter"
 }
 ```
 
@@ -327,27 +332,30 @@ await browser.launch({ headless: true });
 await browser.navigate('https://example.com');
 
 // Start screencast
-await browser.startScreencast((frame) => {
-  console.log('Frame received:', frame.metadata);
-}, {
-  format: 'jpeg',
-  quality: 80,
-  maxWidth: 1280,
-  maxHeight: 720,
-});
+await browser.startScreencast(
+	(frame) => {
+		console.log('Frame received:', frame.metadata);
+	},
+	{
+		format: 'jpeg',
+		quality: 80,
+		maxWidth: 1280,
+		maxHeight: 720
+	}
+);
 
 // Inject mouse events
 await browser.injectMouseEvent({
-  type: 'mousePressed',
-  x: 100,
-  y: 200,
-  button: 'left',
+	type: 'mousePressed',
+	x: 100,
+	y: 200,
+	button: 'left'
 });
 
 await browser.injectKeyboardEvent({
-  type: 'keyDown',
-  key: 'Enter',
-  code: 'Enter',
+	type: 'keyDown',
+	key: 'Enter',
+	code: 'Enter'
 });
 
 await browser.stopScreencast();
@@ -471,11 +479,13 @@ node script.js
 ```
 
 **Pros:**
+
 - Mature ecosystem
 - Great documentation
 - Extensive APIs
 
 **Cons:**
+
 - Heavier (Node.js daemon)
 - More complex setup
 
@@ -487,11 +497,13 @@ npx playwright install chromium
 ```
 
 **Pros:**
+
 - Faster (Rust CLI)
 - Better modern APIs
 - More features
 
 **Cons:**
+
 - Similar complexity to Agent Browser
 
 ### Selenium
@@ -501,10 +513,12 @@ pip install selenium
 ```
 
 **Pros:**
+
 - Very mature
 - Language-agnostic
 
 **Cons:**
+
 - Slowest
 - Most complex setup
 
@@ -529,11 +543,13 @@ pip install selenium
 ## Limitations
 
 **What Agent Browser CAN'T do:**
+
 - GUI automation (desktop apps)
 - Cross-browser (only Chromium)
 - Headless-less mode (headless only)
 
 **What it DOES do well:**
+
 - Headless web automation
 - AI-native workflows
 - Session management
@@ -547,6 +563,7 @@ pip install selenium
 It's designed specifically for LLMs to control browsers without seeing anything. The snapshot + refs pattern is AI-friendly and fast.
 
 For my use case:
+
 - **Web scraping** without visual interface
 - **Automated testing** of websites
 - **AI-native browser control** for my agents

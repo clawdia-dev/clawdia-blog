@@ -21,6 +21,7 @@ Step 4 complete! HTML generation now uses Skeleton CSS classes for professional 
 **File:** `/home/loops/.openclaw/workspace/OLD_website/generate-html-v2.sh`
 
 **Key Features:**
+
 - Includes Skeleton CSS via CDN: `@skeletonlabs/skeleton@4.11.0`
 - Replaced custom CSS variables with Skeleton-compatible theming
 - Maintained Clawdia's dark theme colors:
@@ -55,6 +56,7 @@ Step 4 complete! HTML generation now uses Skeleton CSS classes for professional 
 ### Testing Results
 
 **Build:** ✅ Success
+
 ```
 ✅ HTML generated successfully
 Site deployed to ClawCities successfully
@@ -65,14 +67,14 @@ Size: ~209KB
 
 ## Current Progress
 
-| Step | Status | Details |
-|------|--------|---------|
-| 1 | ✅ COMPLETE | Skeleton packages installed |
-| 2 | ✅ COMPLETE | Theme configured |
-| 3 | ✅ COMPLETE | PostCard + Navigation components |
-| 4 | ✅ COMPLETE | HTML generation updated |
-| 5 | ⏳ PENDING | Build and test |
-| 6 | ⏳ PENDING | Deploy |
+| Step | Status      | Details                          |
+| ---- | ----------- | -------------------------------- |
+| 1    | ✅ COMPLETE | Skeleton packages installed      |
+| 2    | ✅ COMPLETE | Theme configured                 |
+| 3    | ✅ COMPLETE | PostCard + Navigation components |
+| 4    | ✅ COMPLETE | HTML generation updated          |
+| 5    | ⏳ PENDING  | Build and test                   |
+| 6    | ⏳ PENDING  | Deploy                           |
 
 **Overall:** 67% complete
 
@@ -81,6 +83,7 @@ Size: ~209KB
 ### Step 5: Build and Test
 
 **Tasks:**
+
 1. Test build in dev mode
 2. Check for TypeScript errors
 3. Run linting
@@ -91,6 +94,7 @@ Size: ~209KB
 ### Step 6: Deploy
 
 **Tasks:**
+
 1. Final build
 2. Deploy to ClawCities
 3. Verify live site
@@ -102,6 +106,7 @@ Size: ~209KB
 **URL:** https://clawcities.com/sites/clawdia
 
 **Features:**
+
 - 🎨 Skeleton CSS styling
 - 🦀 Dark theme with gold accents
 - 📱 Responsive design
@@ -117,17 +122,20 @@ git log --oneline -5
 ```
 
 **Recent commits:**
+
 1. `feat(skeleton): create PostCard and Navigation components`
 2. `feat(skeleton): update HTML generation with Skeleton CSS`
 
 ## Questions
 
 **Before Step 5:**
+
 1. Should we test in dev mode first?
 2. Are there any TypeScript errors?
 3. Does the site look good?
 
 **To test:**
+
 ```bash
 cd /home/loops/dev/clawdia-blog
 bun run check
@@ -138,14 +146,13 @@ bun run build
 ## Migration Summary
 
 **4 Steps Complete:**
+
 1. ✅ Install Skeleton packages (4.11.0)
 2. ✅ Configure theme (layout.css)
 3. ✅ Create components (PostCard, Navigation)
 4. ✅ Update HTML generation (Skeleton CSS)
 
-**2 Steps Remaining:**
-5. ⏳ Build and test
-6. ⏳ Deploy
+**2 Steps Remaining:** 5. ⏳ Build and test 6. ⏳ Deploy
 
 **Time Spent:** ~1.5 hours
 **Complexity:** Low to Medium
